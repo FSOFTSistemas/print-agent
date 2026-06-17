@@ -1,0 +1,33 @@
+diff --git a/node_modules/escpos-usb/index.js b/node_modules/escpos-usb/index.js
+index 8c21546..8745492 100644
+--- a/node_modules/escpos-usb/index.js
++++ b/node_modules/escpos-usb/index.js
+@@ -2,7 +2,7 @@
+ const os           = require('os');
+ const util          = require('util');
+ const EventEmitter  = require('events');
+-let usb = null;
++const usb = require('usb');
+ 
+ /**
+  * [USB Class Codes ]
+@@ -24,9 +24,6 @@ const IFACE_CLASS = {
+  */
+ function USB(vid, pid){
+ 
+-  if (!usb) {
+-    usb = require('usb');
+-  }
+ 
+   EventEmitter.call(this);
+   var self = this;
+@@ -66,9 +63,6 @@ function USB(vid, pid){
+  * @return {[type]} [description]
+  */
+ USB.findPrinter = function(){
+-  if (!usb) {
+-    usb = require('usb');
+-  }
+   return usb.getDeviceList().filter(function(device){
+     try{
+       return device.configDescriptor.interfaces.filter(function(iface){

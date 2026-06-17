@@ -1,0 +1,164 @@
+Welcome to Node.js v20.19.5.
+Type ".help" for more information.
+> Welcome to Node.js v20.19.5.
+Type ".help" for more information.
+> (node:29252) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:29416) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:15392) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:32052) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:34620) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:33884) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:24772) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:19304) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:28556) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
+(node:33220) Warning: Currently the require() provided to the main script embedded into single-executable applications only supports loading built-in modules.
+To load a module from disk after the single executable application is launched, use require("module").createRequire().
+Support for bundled module loading or virtual file systems are under discussions in https://github.com/nodejs/single-executable
+(Use `print-agent --trace-warnings ...` to show where the warning was created)
+node:internal/main/embedding:111
+    throw new ERR_UNKNOWN_BUILTIN_MODULE(id);
+    ^
+
+Error [ERR_UNKNOWN_BUILTIN_MODULE]: No such built-in module: express
+    at embedderRequire (node:internal/main/embedding:111:11)
+    at server.js:2:17
+    at embedderRunCjs (node:internal/main/embedding:87:10) {
+  code: 'ERR_UNKNOWN_BUILTIN_MODULE'
+}
+
+Node.js v20.19.5
