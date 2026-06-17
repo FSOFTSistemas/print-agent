@@ -129,6 +129,7 @@ Lista as impressoras USB compatíveis conectadas.
     ```json
     [
       {
+        "type": "usb",
         "name": "EPSON TM-T20X",
         "manufacturer": "EPSON",
         "vid": "0x4b8",
@@ -136,6 +137,7 @@ Lista as impressoras USB compatíveis conectadas.
         "deviceAddress": 1
       },
       {
+        "type": "usb",
         "name": "Generic POS Printer",
         "manufacturer": "Unknown",
         "vid": "0x1fc9",
@@ -155,8 +157,21 @@ Envia um buffer de dados brutos (comandos ESC/POS) para uma impressora específi
     ```json
     {
       "printer": {
+        "type": "usb",
         "vid": "0x4b8",
         "pid": "0xe2e"
+      },
+      "bufferB64": "GxhVABx0ZXN0ZSBkZSBpbXByZXNzYW8uLi4KCgoKVgA="
+    }
+    ```
+    Para impressoras de rede compativeis com RAW/JetDirect, envie o IP/host da impressora. A porta padrao e `9100`:
+
+    ```json
+    {
+      "printer": {
+        "type": "network",
+        "host": "192.168.0.50",
+        "port": 9100
       },
       "bufferB64": "GxhVABx0ZXN0ZSBkZSBpbXByZXNzYW8uLi4KCgoKVgA="
     }
@@ -171,6 +186,45 @@ Envia um buffer de dados brutos (comandos ESC/POS) para uma impressora específi
       "message": "Dados brutos enviados para a impressora."
     }
     ```
+
+### Cadastro local de impressoras de rede
+
+As impressoras de rede cadastradas ficam em `data/printers.json` por padrao. Para testar usando outro diretorio, inicie o agente com a variavel `PRINT_AGENT_DATA_DIR`.
+
+#### `GET /printers/network/scan`
+
+Procura impressoras de rede compativeis com RAW/JetDirect testando a porta `9100`.
+
+```http
+GET /printers/network/scan
+GET /printers/network/scan?subnet=192.168.0.0/24
+GET /printers/network/scan?subnet=192.168.0&timeoutMs=500
+```
+
+#### `POST /printers/network`
+
+Salva uma impressora de rede no cadastro local.
+
+```json
+{
+  "name": "Caixa 01",
+  "host": "192.168.0.50",
+  "port": 9100
+}
+```
+
+#### `DELETE /printers/network/:id`
+
+Remove uma impressora de rede cadastrada.
+
+Tambem e possivel imprimir usando o `id` de uma impressora de rede cadastrada:
+
+```json
+{
+  "printerId": "network-192-168-0-50-9100",
+  "bufferB64": "GxhVABx0ZXN0ZSBkZSBpbXByZXNzYW8uLi4KCgoKVgA="
+}
+```
 
 ## Tecnologias Utilizadas
 
