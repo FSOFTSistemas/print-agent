@@ -145,7 +145,15 @@ function validatePrinter(printer) {
 }
 
 function getDataDir() {
-  return process.env.PRINT_AGENT_DATA_DIR || path.join(__dirname, "data");
+  if (process.env.PRINT_AGENT_DATA_DIR) {
+    return process.env.PRINT_AGENT_DATA_DIR;
+  }
+
+  if (process.platform === "win32" && process.env.ProgramData) {
+    return path.join(process.env.ProgramData, "PrintAgent");
+  }
+
+  return path.join(__dirname, "data");
 }
 
 function getPrintersFilePath() {

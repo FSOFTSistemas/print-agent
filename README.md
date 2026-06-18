@@ -189,7 +189,7 @@ Envia um buffer de dados brutos (comandos ESC/POS) para uma impressora específi
 
 ### Cadastro local de impressoras de rede
 
-As impressoras de rede cadastradas ficam em `data/printers.json` por padrao. Para testar usando outro diretorio, inicie o agente com a variavel `PRINT_AGENT_DATA_DIR`.
+As impressoras de rede cadastradas ficam em `C:\ProgramData\PrintAgent\printers.json` no Windows. Para testar usando outro diretorio, inicie o agente com a variavel `PRINT_AGENT_DATA_DIR`.
 
 #### `GET /printers/network/scan`
 

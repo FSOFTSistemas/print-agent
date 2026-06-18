@@ -1,10 +1,10 @@
 [Setup]
 AppName=Print Agent
-AppVersion=2.0
-AppPublisher=Sua Empresa
+AppVersion=3.0
+AppPublisher=F-Soft Sistemas
 DefaultDirName={autopf64}\PrintAgent
 DefaultGroupName=Print Agent
-OutputBaseFilename=PrintAgent-2.0-Setup
+OutputBaseFilename=PrintAgent-3.0-Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -19,6 +19,9 @@ Source: "node.exe"; DestDir: "{app}"
 Source: "server.js"; DestDir: "{app}"
 Source: "start-silent.vbs"; DestDir: "{app}"
 Source: "node_modules\*"; DestDir: "{app}\node_modules"; Flags: recursesubdirs createallsubdirs
+
+[Dirs]
+Name: "{commonappdata}\PrintAgent"; Permissions: users-modify
 
 [Icons]
 ; A MÁGICA ACONTECE AQUI:
