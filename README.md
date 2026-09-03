@@ -226,6 +226,50 @@ Tambem e possivel imprimir usando o `id` de uma impressora de rede cadastrada:
 }
 ```
 
+## Executando no Linux com Docker
+
+Crie a imagem na raiz do projeto:
+
+```bash
+docker build -t print-agent .
+```
+
+Para usar impressoras de rede:
+
+```bash
+docker run -d \
+  --name print-agent \
+  --restart unless-stopped \
+  -p 9100:9100 \
+  -v print-agent-data:/data \
+  print-agent
+```
+
+Para usar impressoras USB, o container também precisa acessar o barramento USB
+do host. A regra abaixo continua funcionando se a impressora for desconectada e
+conectada novamente:
+
+```bash
+docker run -d \
+  --name print-agent \
+  --restart unless-stopped \
+  -p 9100:9100 \
+  -v print-agent-data:/data \
+  -v /dev/bus/usb:/dev/bus/usb \
+  --device-cgroup-rule='c 189:* rmw' \
+  print-agent
+```
+
+Depois, confirme que o agente está online:
+
+```bash
+curl http://localhost:9100/status
+```
+
+O volume `print-agent-data` preserva o cadastro de impressoras de rede. A porta
+pode ser alterada definindo `PRINT_AGENT_PORT` e publicando a mesma porta, por
+exemplo `-e PRINT_AGENT_PORT=9200 -p 9200:9200`.
+
 ## Tecnologias Utilizadas
 
 -   [Node.js](https://nodejs.org/) - Ambiente de execução
