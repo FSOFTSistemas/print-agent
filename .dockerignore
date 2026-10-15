@@ -1,0 +1,14 @@
+.git
+.gitignore
+Dockerfile
+README.md
+node_modules
+dist
+logs
+Output
+data
+*.exe
+*.blob
+*.iss
+*.vbs
+npm-debug.log*
