@@ -6,6 +6,10 @@ const os = require("os");
 const path = require("path");
 const escpos = require("escpos");
 escpos.USB = require("escpos-usb");
+const { createUsbPrinterService } = require("./usb-printer");
+const usbPrinters = createUsbPrinterService({
+  findPrinters: () => escpos.USB.findPrinter(),
+});
 
 const app = express();
 const PORT = Number(process.env.PRINT_AGENT_PORT) || 9100;
@@ -21,46 +25,8 @@ app.get("/status", (req, res) => {
   });
 });
 
-// FUNÇÃO HELPER para transformar o callback em Promise
-function getStringDescriptorAsync(device, descriptorIndex) {
-  return new Promise((resolve, reject) => {
-    try {
-      device.getStringDescriptor(descriptorIndex, (error, data) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(data);
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
 function printToUsbPrinter(printBuffer, printer) {
-  return new Promise((resolve, reject) => {
-    const vid = parseInt(printer.vid);
-    const pid = parseInt(printer.pid);
-    const device = new escpos.USB(vid, pid);
-
-    device.open((error) => {
-      if (error) {
-        return reject(error);
-      }
-
-      device.write(printBuffer, (err) => {
-        if (device.isOpen) {
-          device.close();
-        }
-
-        if (err) {
-          return reject(err);
-        }
-
-        resolve();
-      });
-    });
-  });
+  return usbPrinters.print(printBuffer, printer);
 }
 
 function printToNetworkPrinter(printBuffer, printer) {
@@ -349,51 +315,7 @@ async function scanNetworkPrinters(options = {}) {
 // Rota para listar impressoras
 app.get("/printers", async (req, res) => {
   try {
-    const devices = escpos.USB.findPrinter();
-    const printerList = [];
-
-    for (const device of devices) {
-      let name = "Dispositivo USB Genérico";
-      let manufacturer = "Fabricante Desconhecido";
-
-      try {
-        device.open();
-
-        if (device.deviceDescriptor.iProduct > 0) {
-          const rawName = await getStringDescriptorAsync(
-            device,
-            device.deviceDescriptor.iProduct
-          );
-          // AQUI ESTÁ A CORREÇÃO: Limpa a string de caracteres nulos e espaços
-          name = rawName.replace(/\0/g, "").trim();
-        }
-        if (device.deviceDescriptor.iManufacturer > 0) {
-          const rawManufacturer = await getStringDescriptorAsync(
-            device,
-            device.deviceDescriptor.iManufacturer
-          );
-          // AQUI ESTÁ A CORREÇÃO: Limpa a string de caracteres nulos e espaços
-          manufacturer = rawManufacturer.replace(/\0/g, "").trim();
-        }
-      } catch (e) {
-        console.warn(
-          `Aviso: Não foi possível ler os detalhes do dispositivo. Erro: ${e.message}`
-        );
-      } finally {
-        if (device.isOpen) {
-          device.close();
-        }
-      }
-
-      printerList.push({
-        type: "usb",
-        name,
-        manufacturer,
-        vid: `0x${device.deviceDescriptor.idVendor.toString(16)}`,
-        pid: `0x${device.deviceDescriptor.idProduct.toString(16)}`,
-        deviceAddress: device.deviceAddress,
-      });
-    }
+    const printerList = await usbPrinters.list();
 
     res.json([...printerList, ...getSavedNetworkPrinters()]);
   } catch (error) {
@@ -551,38 +473,10 @@ app.post("/print/raw-buffer-usb-legacy", async (req, res) => {
     }
 
     const printBuffer = Buffer.from(bufferB64, "base64");
-    const vid = parseInt(printer.vid);
-    const pid = parseInt(printer.pid);
-    const device = new escpos.USB(vid, pid);
-
-    if (!device) {
-      return res.status(404).json({ error: "Impressora não encontrada." });
-    }
-
-    device.open((error) => {
-      if (error) {
-        console.error("Erro ao conectar na impressora USB:", error);
-        return res.status(500).json({
-          error: "Falha ao conectar com a impressora USB.",
-          details: error.message,
-        });
-      }
-
-      device.write(printBuffer, (err) => {
-        if (err) {
-          console.error("Erro ao enviar dados para a impressora:", err);
-          res.status(500).json({
-            error: "Falha ao escrever na impressora.",
-            details: err.message,
-          });
-        } else {
-          res.json({
-            success: true,
-            message: "Dados brutos enviados para a impressora.",
-          });
-        }
-        device.close();
-      });
+    await printToUsbPrinter(printBuffer, printer);
+    res.json({
+      success: true,
+      message: "Dados brutos enviados para a impressora.",
     });
   } catch (err) {
     console.error("Erro geral na rota /print/raw-buffer:", err);

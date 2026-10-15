@@ -17,6 +17,7 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 ; Copia os arquivos necessários. Não precisamos mais do nssm.exe!
 Source: "node.exe"; DestDir: "{app}"
 Source: "server.js"; DestDir: "{app}"
+Source: "usb-printer.js"; DestDir: "{app}"
 Source: "start-silent.vbs"; DestDir: "{app}"
 Source: "node_modules\*"; DestDir: "{app}\node_modules"; Flags: recursesubdirs createallsubdirs
 
