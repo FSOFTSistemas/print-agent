@@ -10,6 +10,8 @@ const { createUsbPrinterService } = require("./usb-printer");
 const usbPrinters = createUsbPrinterService({
   findPrinters: () => escpos.USB.findPrinter(),
 });
+const { createWindowsPrinterService, validateWindowsPrinter } = require("./windows-printer");
+const windowsPrinters = createWindowsPrinterService();
 
 const app = express();
 const PORT = Number(process.env.PRINT_AGENT_PORT) || 9100;
@@ -107,7 +109,9 @@ function validatePrinter(printer) {
     return null;
   }
 
-  return "Tipo de impressora inválido. Use 'usb' ou 'network'.";
+  if (type === "windows") return validateWindowsPrinter(printer);
+
+  return "Tipo de impressora inválido. Use 'usb', 'network' ou 'windows'.";
 }
 
 function getDataDir() {
@@ -315,9 +319,12 @@ async function scanNetworkPrinters(options = {}) {
 // Rota para listar impressoras
 app.get("/printers", async (req, res) => {
   try {
-    const printerList = await usbPrinters.list();
-
-    res.json([...printerList, ...getSavedNetworkPrinters()]);
+    // Falha em um transporte nao pode esconder as impressoras dos outros.
+    const lists = await Promise.allSettled([usbPrinters.list(), windowsPrinters.list()]);
+    for (const [index, result] of lists.entries()) {
+      if (result.status === "rejected") console.warn(`Falha ao listar impressoras ${index === 0 ? "USB" : "Windows"}: ${result.reason.message}`);
+    }
+    res.json([...lists.flatMap((result) => result.status === "fulfilled" ? result.value : []), ...getSavedNetworkPrinters()]);
   } catch (error) {
     console.error("Erro ao buscar impressoras:", error);
     res
@@ -433,8 +440,11 @@ app.post("/print/raw-buffer", async (req, res) => {
 
     const printBuffer = Buffer.from(bufferB64, "base64");
     const printerType = printer.type || "usb";
+    let windowsJob;
 
-    if (printerType === "network") {
+    if (printerType === "windows") {
+      windowsJob = await windowsPrinters.print(printBuffer, printer);
+    } else if (printerType === "network") {
       await printToNetworkPrinter(printBuffer, {
         ...printer,
         port: printer.port ? Number(printer.port) : 9100,
@@ -445,7 +455,8 @@ app.post("/print/raw-buffer", async (req, res) => {
 
     res.json({
       success: true,
-      message: "Dados brutos enviados para a impressora.",
+      message: windowsJob ? "Trabalho enviado para a fila de impressao do Windows." : "Dados brutos enviados para a impressora.",
+      ...(windowsJob ? { jobId: windowsJob.jobId, transport: "windows" } : {}),
     });
   } catch (err) {
     console.error("Erro geral na rota /print/raw-buffer:", err);

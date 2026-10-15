@@ -239,7 +239,7 @@ test("valida VID/PID sem abrir USB", async () => {
 });
 
 // Executa as rotas reais sem abrir uma porta HTTP nem carregar o USB nativo.
-function loadRoutes(device) {
+function loadRoutes(device, windowsService = { list: async () => [], print: async () => { throw new Error("Windows nao configurado no teste"); } }) {
   const fs = require("node:fs");
   const vm = require("node:vm");
   const path = require("node:path");
@@ -265,6 +265,10 @@ function loadRoutes(device) {
       if (name === "escpos") return fakeEscpos;
       if (name === "escpos-usb") return USB;
       if (name === "./usb-printer") return { createUsbPrinterService };
+      if (name === "./windows-printer") return {
+        createWindowsPrinterService: () => windowsService,
+        validateWindowsPrinter: require("../windows-printer").validateWindowsPrinter,
+      };
       if (name === "fs") return { existsSync: () => false };
       return require(name);
     },
@@ -307,4 +311,58 @@ test("erro USB retorna HTTP 500 sem derrubar a rota seguinte", async () => {
   assert.equal(result.code, 500);
   assert.match(result.body.details, /reservar interface: LIBUSB_ERROR_NO_DEVICE/);
   assert.equal((await request("GET", "/printers")).body[0].name, "L42");
+});
+
+test("rota Windows envia bytes sem passar pelo USB e devolve jobId", async () => {
+  const f = fixture();
+  const windows = { type: "windows", printerName: "Elgin L42 Pro Full" };
+  let writes = 0;
+  const request = loadRoutes(f.device, {
+    list: async () => [],
+    print: async (bytes, selected) => {
+      assert.deepEqual(bytes, buffer);
+      assert.equal(selected, windows);
+      writes++;
+      return { jobId: 42 };
+    },
+  });
+  const result = await request("POST", "/print/raw-buffer", { printer: windows, bufferB64: buffer.toString("base64") });
+  assert.equal(result.code, 200);
+  assert.equal(result.body.success, true);
+  assert.equal(result.body.jobId, 42);
+  assert.equal(result.body.transport, "windows");
+  assert.equal(writes, 1);
+  assert.deepEqual(f.events, []);
+});
+
+test("rota Windows valida nome e nao faz fallback USB em erro", async () => {
+  const f = fixture();
+  const request = loadRoutes(f.device, {
+    list: async () => [], print: async () => { throw new Error("Spooler indisponivel"); },
+  });
+  assert.equal((await request("POST", "/print/raw-buffer", { printer: { type: "windows" }, bufferB64: "YQ==" })).code, 400);
+  const result = await request("POST", "/print/raw-buffer", { printer: { type: "windows", printerName: "L42" }, bufferB64: "YQ==" });
+  assert.equal(result.code, 500);
+  assert.equal(result.body.details, "Spooler indisponivel");
+  assert.deepEqual(f.events, []);
+});
+
+test("listagem preserva USB quando consulta Windows falha", async () => {
+  const f = fixture();
+  const request = loadRoutes(f.device, {
+    list: async () => { throw new Error("Windows indisponivel"); }, print: async () => {},
+  });
+  const result = await request("GET", "/printers");
+  assert.equal(result.code, 200);
+  assert.equal(result.body[0].name, "L42");
+});
+
+test("listagem preserva Windows quando USB falha", async () => {
+  const f = fixture();
+  const windows = { id: "windows-l42", type: "windows", name: "L42", printerName: "L42" };
+  Object.defineProperty(f.device, "deviceDescriptor", { get() { throw new Error("USB indisponivel"); } });
+  const request = loadRoutes(f.device, { list: async () => [windows], print: async () => {} });
+  const result = await request("GET", "/printers");
+  assert.equal(result.code, 200);
+  assert.equal(result.body[0].type, "windows");
 });
