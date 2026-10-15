@@ -1,10 +1,10 @@
 [Setup]
 AppName=Print Agent
-AppVersion=3.0
+AppVersion=3.1
 AppPublisher=F-Soft Sistemas
 DefaultDirName={autopf64}\PrintAgent
 DefaultGroupName=Print Agent
-OutputBaseFilename=PrintAgent-3.0-Setup
+OutputBaseFilename=PrintAgent-3.1`-Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -18,6 +18,8 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 Source: "node.exe"; DestDir: "{app}"
 Source: "server.js"; DestDir: "{app}"
 Source: "usb-printer.js"; DestDir: "{app}"
+Source: "windows-printer.js"; DestDir: "{app}"
+Source: "windows-spooler.ps1"; DestDir: "{app}"
 Source: "start-silent.vbs"; DestDir: "{app}"
 Source: "node_modules\*"; DestDir: "{app}\node_modules"; Flags: recursesubdirs createallsubdirs
 
